@@ -1,0 +1,224 @@
+.app-shell {
+  max-width: 1200px;
+  margin: 0 auto 64px;
+  padding: 32px 24px 48px;
+}
+
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 18px;
+  margin: 0 0 28px;
+  background: var(--nav-bg);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  backdrop-filter: blur(12px);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.06);
+}
+
+.brand {
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  font-size: 20px;
+  color: var(--text-primary);
+}
+
+.topbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.nav-links {
+  display: flex;
+  gap: 14px;
+  align-items: center;
+  font-size: 15px;
+}
+
+.nav-links a {
+  padding: 8px 12px;
+  border-radius: 10px;
+  color: var(--text-primary);
+  transition: background-color 120ms ease, color 120ms ease;
+}
+
+.nav-links a.active {
+  background: var(--nav-active-bg);
+  color: var(--nav-active-text);
+}
+
+.nav-links a:hover:not(.active) {
+  background: var(--nav-hover-bg);
+  color: var(--nav-hover-text);
+}
+
+.theme-toggle {
+  border: 1px solid var(--border);
+  background: var(--bg-subtle);
+  color: var(--text-primary);
+  border-radius: 12px;
+  padding: 8px 10px;
+  cursor: pointer;
+  transition: background-color 120ms ease, transform 120ms ease,
+    border-color 120ms ease;
+}
+
+.theme-toggle:hover {
+  background: var(--nav-hover-bg);
+  transform: translateY(-1px);
+}
+
+.theme-toggle:active {
+  transform: translateY(0);
+}
+
+.page-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.section {
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: 24px;
+  box-shadow: 0 18px 50px rgba(15, 23, 42, 0.06);
+}
+
+.section-header {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 18px;
+}
+
+.section-header h1 {
+  margin: 0;
+  font-size: 26px;
+  letter-spacing: -0.02em;
+  color: var(--text-primary);
+}
+
+.eyebrow {
+  margin: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  font-size: 11px;
+  color: var(--eyebrow);
+  font-weight: 600;
+}
+
+.subhead {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: 15px;
+}
+
+.grid-listings {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 18px;
+}
+
+.auth-section {
+  max-width: 640px;
+  margin: 0 auto;
+}
+
+.auth-card {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 20px;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: var(--bg-subtle);
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.field label {
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.field input {
+  border: 1px solid var(--input-border);
+  border-radius: 10px;
+  padding: 12px;
+  font-size: 15px;
+  background: var(--input-bg);
+  transition: border-color 120ms ease, box-shadow 120ms ease;
+}
+
+.field input:focus {
+  outline: none;
+  border-color: var(--accent-strong);
+  box-shadow: 0 0 0 4px var(--input-focus);
+}
+
+.btn-primary {
+  margin-top: 6px;
+  border: none;
+  border-radius: 12px;
+  background: linear-gradient(120deg, var(--accent-strong), var(--accent));
+  color: #ffffff;
+  padding: 12px 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 120ms ease, box-shadow 120ms ease;
+}
+
+.btn-primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 12px 30px rgba(79, 70, 229, 0.25);
+}
+
+.btn-primary:active {
+  transform: translateY(0);
+}
+
+.helper-text {
+  margin: 0;
+  color: var(--helper-text);
+  font-size: 14px;
+}
+
+.inline-link a {
+  color: var(--accent);
+  font-weight: 700;
+  text-decoration: none;
+  transition: color 120ms ease;
+}
+
+.inline-link a:hover {
+  color: var(--accent-strong);
+}
+
+@media (max-width: 640px) {
+  .topbar {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .nav-links {
+    width: 100%;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+  }
+
+  .section {
+    padding: 18px;
+  }
+}
