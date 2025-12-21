@@ -2,8 +2,6 @@ import admin from "firebase-admin";
 import { createRequire } from "module";
 import { supabase } from "./supabaseClient.js";
 import express from "express";
-import fs from "fs";
-import { CLIENT_RENEG_LIMIT } from "tls";
 
 const require = createRequire(import.meta.url);
 
@@ -29,8 +27,13 @@ if (serviceAccount) {
   });
 }
 
+import cors from "cors";
+
+// ... imports
+
 const app = express();
 
+app.use(cors());
 // CRITICAL: Parse JSON request bodies
 app.use(express.json());
 
