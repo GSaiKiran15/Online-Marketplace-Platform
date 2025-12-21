@@ -1,7 +1,7 @@
 import React from "react";
 import "./App.css";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import axios from "axios";
+import api from "./api/axios.js";
 import AllListings from "./pages/AllListings.jsx";
 import Layout from "./components/Layout/Layout.jsx";
 import Login from "./pages/Login.jsx";
@@ -30,7 +30,7 @@ const routes = [
       
       if (!user) return [];
       try {
-        const response = await axios.get("/api/feed");
+        const response = await api.get("/api/feed");
         return response.data;
       } catch (error) {
         console.error("Failed to load listings:", error);
