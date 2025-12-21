@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import "./CreateListing.css";
 import useUser from "../useUser.js";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import api from "../api/axios.js";
 
 const categoryMap = {
   "Electronics": "electronics",
@@ -119,7 +119,7 @@ const handleSubmit = async (e) => {
 
   setResult(listingResult)
   console.log(listingResult)
-  const response = await axios.post("/api/newListing", listingResult)
+  const response = await api.post("/api/newListing", listingResult)
   console.log(response.data)
   navigate("/")
 }

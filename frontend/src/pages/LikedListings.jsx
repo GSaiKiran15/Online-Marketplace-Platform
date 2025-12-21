@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Listing } from "../components/Listing.jsx";
 import "./LikedListings.css";
 import useUser from "../useUser.js";
-import axios from "axios";
+import api from "../api/axios.js";
 
 const LikedListings = () => {
   const { user, isLoading } = useUser();
@@ -16,7 +16,7 @@ const LikedListings = () => {
 
   const fetchLikedListings = async () => {
     try {
-      const response = await axios.get("/api/likedListings", {
+      const response = await api.get("/api/likedListings", {
         params: { firebase_uid: user.uid },
       });
       setLikedListings(response.data);

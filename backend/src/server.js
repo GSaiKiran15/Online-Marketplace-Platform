@@ -6,16 +6,37 @@ import fs from "fs";
 import { CLIENT_RENEG_LIMIT } from "tls";
 
 const require = createRequire(import.meta.url);
-const serviceAccount = require("../credentials.json");
 
-admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount),
-});
+let serviceAccount;
+if (process.env.FIREBASE_SERVICE_ACCOUNT) {
+  try {
+    serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT);
+  } catch (e) {
+    console.error("Failed to parse FIREBASE_SERVICE_ACCOUNT env var", e);
+  }
+} else {
+  // Fallback to local file for development
+  try {
+    serviceAccount = require("../credentials.json");
+  } catch (e) {
+    console.warn("No credentials.json found and no FIREBASE_SERVICE_ACCOUNT env var set.");
+  }
+}
+
+if (serviceAccount) {
+  admin.initializeApp({
+    credential: admin.credential.cert(serviceAccount),
+  });
+}
 
 const app = express();
 
 // CRITICAL: Parse JSON request bodies
 app.use(express.json());
+
+app.get("/api/", async (req, res) => {
+  res.send("Hello World!");
+});
 
 app.get("/api/feed", async (req, res) => {
   // Run the select to actually fetch rows and return an error response if it fails
@@ -208,6 +229,13 @@ app.put("/api/listing/:id", async (req, res) => {
   res.status(200).json({ updated: true });
 });
 
-app.listen(8000, (req, res) => {
-  console.log("Server is up and running.");
-});
+// Export the Express API directly for Vercel
+export default app;
+
+// Only start the server if we're not in a serverless environment (e.g. local dev)
+if (process.env.NODE_ENV !== 'production') {
+  const PORT = process.env.PORT || 8000;
+  app.listen(PORT, () => {
+    console.log(`Server is up and running on port ${PORT}`);
+  });
+}

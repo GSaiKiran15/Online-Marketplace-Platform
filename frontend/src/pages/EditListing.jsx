@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import "./CreateListing.css";
 import useUser from "../useUser.js";
 import { useNavigate, useParams } from "react-router-dom";
-import axios from "axios";
+import api from "../api/axios.js";
 
 const categoryMap = {
   "Electronics": "electronics",
@@ -51,7 +51,7 @@ export const EditListing = () => {
 
     const fetchListing = async () => {
       try {
-        const response = await axios.get(`/api/listing/${id}`);
+        const response = await api.get(`/api/listing/${id}`);
         const listing = response.data;
         setTitle(listing.title);
         setPrice(listing.price);
@@ -88,7 +88,7 @@ const handleSubmit = async (e) => {
 
   setResult(listingResult)
   console.log(listingResult)
-  const response = await axios.put(`/api/listing/${id}`, listingResult)
+  const response = await api.put(`/api/listing/${id}`, listingResult)
   console.log(response.data)
   navigate("/")
 }

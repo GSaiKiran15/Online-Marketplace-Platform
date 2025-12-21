@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Listing } from "../components/Listing.jsx";
 import "./AllListings.css";
 import useUser from "../useUser.js";
-import axios from "axios";
+import api from "../api/axios.js";
 
 const MyListings = () => {
   const { user, isLoading } = useUser();
@@ -18,7 +18,7 @@ const MyListings = () => {
 
   const fetchLikedListings = async () => {
     try {
-      const response = await axios.get("/api/myListings", {
+      const response = await api.get("/api/myListings", {
         params: { user_id: user.uid },
       });
       setListings(response.data);

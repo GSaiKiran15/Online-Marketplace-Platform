@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "./ListingDescription.css";
 import { useParams, useNavigate } from "react-router-dom";
-import axios from "axios";
+import api from "../api/axios.js";
 import useUser from "../useUser";
 
 export const ListingDescription = () => {
@@ -18,7 +18,7 @@ export const ListingDescription = () => {
 
   const fetchData = async () => {
     try {
-      const response = await axios.get(`/api/listing/${id}`, {
+      const response = await api.get(`/api/listing/${id}`, {
         params: { firebase_uid: user.uid },
       });
 
@@ -57,7 +57,7 @@ export const ListingDescription = () => {
     
     if (!isLiked) {
       try {
-        const response = await axios.post("/api/likeListing", {
+        const response = await api.post("/api/likeListing", {
           firebase_uid: user.uid,
           listing_id: listing.id
         });
@@ -72,7 +72,7 @@ export const ListingDescription = () => {
       }
     } else {
       try {
-        const response = await axios.post("/api/unlikeListing", {
+        const response = await api.post("/api/unlikeListing", {
           firebase_uid: user.uid,
           listing_id: listing.id
         });
