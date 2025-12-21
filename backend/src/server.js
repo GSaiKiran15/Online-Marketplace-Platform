@@ -37,7 +37,7 @@ app.use(cors());
 // CRITICAL: Parse JSON request bodies
 app.use(express.json());
 
-app.get("/api/", async (req, res) => {
+app.get("/", async (req, res) => {
   res.send("Hello World!");
 });
 
