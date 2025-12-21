@@ -80,3 +80,21 @@ temp/
 *.key
 *.crt
 *.p12
+
+########################
+# User requested ignores
+########################
+*.txt
+
+# Ignore images
+*.jpg
+*.jpeg
+*.png
+*.gif
+*.svg
+*.webp
+
+# Whitelist images in specific folders
+!frontend/public/**
+!**/public/**
+!frontend/src/assets/**

@@ -1,7 +1,7 @@
 import React from "react";
 import "./Listing.css";
 
-const placeholderImage = "/vite.svg";
+const placeholderImage = "/no-pictures.png";
 
 export const Listing = ({ image = null, name, price, location, onClick }) => {
   const displayPrice =

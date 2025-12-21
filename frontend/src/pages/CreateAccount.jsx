@@ -3,7 +3,7 @@ import {
   createUserWithEmailAndPassword,
   updateProfile,
   getAuth,
-} from "react-router-dom";
+} from "firebase/auth";
 import axios from "axios";
 import { useState } from "react";
 
@@ -43,9 +43,9 @@ const CreateAccount = () => {
         displayName: name,
       });
 
-      //   const uid = credential.user.uid
-      //   await axios.post("/api/newUser", {uid, email, name})
-      //   console.log("Account creation attempt:", email);
+      const uid = credential.user.uid
+      await axios.post("/api/newUser", {uid, email, name})
+      console.log("Account creation attempt:", email);
 
       // Navigate to projects after successful registration
       navigate("/");

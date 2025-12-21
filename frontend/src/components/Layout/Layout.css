@@ -83,3 +83,8 @@
     flex-wrap: wrap;
   }
 }
+
+.logout-button{
+  background-color: transparent;
+  border: none;
+}

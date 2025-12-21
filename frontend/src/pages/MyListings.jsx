@@ -1,22 +1,34 @@
 import React, { useEffect, useState } from "react";
-import { useLoaderData, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { Listing } from "../components/Listing.jsx";
 import "./AllListings.css";
 import useUser from "../useUser.js";
+import axios from "axios";
 
-const AllListings = () => {
+const MyListings = () => {
   const { user, isLoading } = useUser();
-  const allListings = useLoaderData() || [];
   const navigate = useNavigate();
+  const [listings, setListings] = useState([]);
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [showFilters, setShowFilters] = useState(false);
   const [sortBy, setSortBy] = useState("newest");
 
   useEffect(() => {
-    if (!isLoading && !user) {
-      navigate("/login");
+  if (!user || isLoading) return;
+
+  const fetchLikedListings = async () => {
+    try {
+      const response = await axios.get("/api/myListings", {
+        params: { user_id: user.uid },
+      });
+      setListings(response.data);
+    } catch (err) {
+      console.error("Failed to fetch liked listings", err);
     }
-  }, [user, isLoading, navigate]);
+  };
+
+  fetchLikedListings();
+}, [user, isLoading]);
 
   // Map UI-friendly names to database values
   const categoryMap = {
@@ -45,8 +57,8 @@ const AllListings = () => {
 
   const filteredListings =
     selectedCategories.length === 0
-      ? allListings
-      : allListings.filter((listing) => {
+      ? listings
+      : listings.filter((listing) => {
           const dbCategories = selectedCategories.map(
             (cat) => categoryMap[cat]
           );
@@ -135,4 +147,4 @@ const AllListings = () => {
   );
 };
 
-export default AllListings;
+export default MyListings;

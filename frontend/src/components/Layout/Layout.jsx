@@ -1,30 +1,20 @@
-import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import React from "react";
+import { Link, useNavigate } from "react-router-dom";
 import "./Layout.css";
-
+import useUser from "../../useUser";
+import { getAuth, signOut } from "firebase/auth";
 const Layout = ({ children }) => {
-  const [theme, setTheme] = useState("light");
-
-  useEffect(() => {
-    const stored = localStorage.getItem("theme");
-    if (stored === "light" || stored === "dark") {
-      setTheme(stored);
-      return;
+  const {user, isLoading, userName} = useUser()
+  const navigate = useNavigate()
+  const handleLogout = async () => {
+    try {
+      const auth = getAuth()
+      await signOut(auth)
+      navigate("/login");
+    } catch (error) {
+      console.error("Logout failed:", error);
     }
-
-    const prefersDark = window.matchMedia(
-      "(prefers-color-scheme: dark)"
-    ).matches;
-    setTheme(prefersDark ? "dark" : "light");
-  }, []);
-
-  useEffect(() => {
-    document.documentElement.dataset.theme = theme;
-    localStorage.setItem("theme", theme);
-  }, [theme]);
-
-  const toggleTheme = () =>
-    setTheme((prev) => (prev === "light" ? "dark" : "light"));
+  }
 
   return (
     <div className="layout">
@@ -32,28 +22,33 @@ const Layout = ({ children }) => {
         <Link to="/" className="navbar-brand">
           MarketPulse
         </Link>
-        <nav className="navbar-links">
-          <Link to="/" className="navbar-link">
-            Listings
-          </Link>
-          <Link to="/login" className="navbar-link">
-            Login
-          </Link>
-          <Link to="/create-account" className="navbar-link">
-            Create Account
-          </Link>
-          <button
-            type="button"
-            className="theme-toggle"
-            onClick={toggleTheme}
-            aria-label={
-              theme === "light" ? "Switch to dark mode" : "Switch to light mode"
-            }
-          >
-            {theme === "light" ? "🌙" : "☀️"}
-          </button>
-        </nav>
+
+        {!isLoading && (
+          user ? (
+            <nav className="navbar-links">
+              <span className="navbar-user">Hi, {userName}</span>
+              <Link to="/my-listings" className="navbar-link">My Listings</Link>
+              <Link to="/" className="navbar-link">
+                Listings
+              </Link>
+              <Link to="/create-listing" className="navbar-link">Create Listing</Link>
+
+              <Link to="/liked-listings" className="navbar-link">Liked Listings</Link>
+              <button onClick={handleLogout} className="logout-button navbar-link">Logout</button>
+            </nav>
+          ) : (
+            <nav className="navbar-links">
+              <Link to="/login" className="navbar-link">
+                Login
+              </Link>
+              <Link to="/create-account" className="navbar-link">
+                Create Account
+              </Link>
+            </nav>
+          )
+        )}
       </header>
+
       <main className="layout-content">{children}</main>
     </div>
   );

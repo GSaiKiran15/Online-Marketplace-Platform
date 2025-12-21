@@ -7,7 +7,10 @@ import Layout from "./components/Layout/Layout.jsx";
 import Login from "./pages/Login.jsx";
 import CreateAccount from "./pages/CreateAccount.jsx";
 import { ListingDescription } from "./pages/ListingDescription.jsx";
-
+import { CreateListing } from "./pages/CreateListing.jsx";
+import LikedListings from "./pages/LikedListings.jsx";
+import MyListings from "./pages/MyListings.jsx";
+import EditListing from "./pages/EditListing.jsx";
 const routes = [
   {
     path: "/",
@@ -17,9 +20,18 @@ const routes = [
       </Layout>
     ),
     loader: async () => {
+      const { getAuth, onAuthStateChanged } = await import("firebase/auth");
+      const user = await new Promise((resolve) => {
+        const unsubscribe = onAuthStateChanged(getAuth(), (user) => {
+          unsubscribe();
+          resolve(user);
+        });
+      });
+      
+      if (!user) return [];
       try {
         const response = await axios.get("/api/feed");
-        return response.data
+        return response.data;
       } catch (error) {
         console.error("Failed to load listings:", error);
         return [];
@@ -28,16 +40,60 @@ const routes = [
   },
   {
     path: "/login",
-    element: <Login />,
+    element: (
+      <Layout>
+        <Login />
+      </Layout>
+    ),
   },
   {
     path: "/create-account",
-    element: <CreateAccount />,
+    element: (
+      <Layout>
+        <CreateAccount />
+      </Layout>
+    ),
   },
   {
-    path: "/listing",
-    element: <ListingDescription/>
+    path: "/listing/:id",
+    element: (
+      <Layout>
+        <ListingDescription />
+      </Layout>
+    ),
   },
+  {
+    path: "/create-listing",
+    element: (
+      <Layout>
+        <CreateListing/>
+      </Layout>
+    ),
+  },
+  {
+    path: "/liked-listings",
+    element: (
+      <Layout>
+        <LikedListings />
+      </Layout>
+    ),
+  },
+  {
+    path: "/my-listings",
+    element: (
+      <Layout>
+        <MyListings />
+      </Layout>
+    ),
+  },
+  {
+    path: "/edit-listing/:id",
+    element: (
+      <Layout>
+        <EditListing />
+      </Layout>
+    ),
+  }
 ];
 
 const router = createBrowserRouter(routes);

@@ -400,7 +400,8 @@
 }
 
 .contact-btn,
-.favorite-btn {
+.favorite-btn,
+.edit-btn {
   width: 100%;
   padding: 14px 20px;
   border: none;
@@ -427,14 +428,25 @@
   box-shadow: 0 6px 20px rgba(79, 70, 229, 0.35);
 }
 
-.favorite-btn {
+.favorite-btn,
+.edit-btn {
   background: var(--bg-subtle);
   color: var(--text-primary);
   border: 1px solid var(--border);
 }
 
-.favorite-btn:hover {
+.favorite-btn:hover,
+.edit-btn:hover {
   background: var(--nav-hover-bg);
+  transform: translateY(-2px);
+}
+
+.favorite-btn-filled {
+  background: var(--accent);
+  color: white;
+}
+
+.favorite-btn-filled:hover {
   transform: translateY(-2px);
 }
 

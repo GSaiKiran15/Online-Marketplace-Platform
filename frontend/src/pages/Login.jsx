@@ -1,21 +1,29 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
-import {getAuth, signInWithEmailAndPassword} from 'firebase/auth'
+import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 const Login = () => {
-    const [email ,setEmail] = useState("")
-    const [password, setPassword] = useState("")
-    const [error, setError] = useState("")
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const navigate = useNavigate();
 
-    const navigate = useNavigate()
-
-    async function logIn() {
-        try{
-            await signInWithEmailAndPassword(getAuth(),email, password);
-            navigate('/articles');
-        } catch (e) {
-            setError(e.message)
-        }
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    setError("");
+    setIsLoading(true);
+    try {
+      await signInWithEmailAndPassword(getAuth(), email, password);
+      console.log("Login attempt:", email);
+      navigate("/");
+    } catch (err) {
+      setError(
+        err.message || "Failed to login. Please check your credentials."
+      );
+    } finally {
+      setIsLoading(false);
     }
+  };
 
   return (
     <section className="section auth-section">
@@ -26,8 +34,8 @@ const Login = () => {
           Access your saved searches, favorites, and listings.
         </p>
       </header>
-        {error && <p>{error}</p>}
-      <form className="auth-card">
+      {error && <p>{error}</p>}
+      <form className="auth-card" onSubmit={handleLogin}>
         <div className="field">
           <label htmlFor="email">Email</label>
           <input
@@ -38,7 +46,7 @@ const Login = () => {
             autoComplete="email"
             required
             value={email}
-            onChange={e => setEmail(e.target.value)}
+            onChange={(e) => setEmail(e.target.value)}
           />
         </div>
 
@@ -52,16 +60,22 @@ const Login = () => {
             autoComplete="current-password"
             required
             value={password}
-            onChange={e => setPassword(e.target.value)}
+            onChange={(e) => setPassword(e.target.value)}
           />
         </div>
 
-        <button type="submit" className="btn-primary" onClick={logIn}>
-          Log in
+        <button type="submit" className="btn-primary" disabled={isLoading}>
+          {isLoading ? "Logging in..." : "Login"}
         </button>
         <p className="helper-text">
-          Forgot password? Reset from the create account page for now. No
-          account? <Link to="/create-account">Create one</Link>.
+          Forgot password? Reset from the create account page for now.
+          <br />
+          <br />
+          No account?{" "}
+          <span className="inline-link">
+            <Link to="/create-account">Create one</Link>
+          </span>
+          .
         </p>
       </form>
     </section>
