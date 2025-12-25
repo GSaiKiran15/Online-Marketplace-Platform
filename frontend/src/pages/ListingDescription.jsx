@@ -92,6 +92,22 @@ export const ListingDescription = () => {
     navigate(`/edit-listing/${listing.id}`);
   };
     
+  const handleMessage = async () => {
+    const response = await api.get("/api/findChat", {
+      firebase_uid: user.uid,
+      listing_id: listing.id
+    })
+
+    if (response.status === 200) {
+      navigate(`/conversation/${conversation.id}`)
+    }
+    else{
+      const response = await api.post("/api/createChat")
+      if (response.status === 200) {
+        navigate(`/conversation/${conversation.id}`)
+      }
+    }
+  }
   console.log(listing);
   if (loading) return <p>Loading...</p>;
   return (
@@ -225,20 +241,10 @@ export const ListingDescription = () => {
                   <p className="seller-meta">Member since {listing.user.created_at.slice(0,4)}</p>
                 </div>
               </div>
-              <button className="contact-btn">
-                <svg
-                  width="20"
-                  height="20"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                >
-                  <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
-                </svg>
-                Contact Seller
-              </button>
-              {isOwner ? <button className="edit-btn" onClick={() => navigate(`/edit-listing/${listing.id}`)}>
+              {isOwner ? <>
+              
+              
+              <button className="edit-btn" onClick={() => navigate(`/edit-listing/${listing.id}`)}>
                 <svg
                   width="20"
                   height="20"
@@ -252,7 +258,19 @@ export const ListingDescription = () => {
                   <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z" />
                 </svg>
                 Edit Listing
-              </button> : <button className="favorite-btn" onClick={() => handleSaveListing(listing)}>
+              </button></> : <><button className="contact-btn" onClick={handleMessage}>
+                <svg
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                >
+                  <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+                </svg>
+                Contact Seller
+              </button><button className="favorite-btn" onClick={() => handleSaveListing(listing)}>
                 <svg
                   width="20"
                   height="20"
@@ -264,7 +282,7 @@ export const ListingDescription = () => {
                   <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
                 </svg>
                 {isLiked ? "Saved" : "Save Listing"}
-              </button>}
+              </button></>}
             </div>
 
             <div className="safety-card">

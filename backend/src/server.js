@@ -212,6 +212,28 @@ app.get("/api/myListings", async (req, res) => {
   res.json(data);
 });
 
+app.get("/api/userProfile", async (req, res) => {
+  const { firebase_uid } = req.query;
+
+  const { data, error } = await supabase
+    .from("profiles")
+    .select("*")
+    .eq("firebase_uid", firebase_uid)
+    .single();
+
+  if (error) {
+    console.error("/api/userProfile supabase error", error);
+    return res.status(500).json({ message: "Failed to load user profile" });
+  }
+
+  // Mocking rating for now as it's not in DB
+  res.json({
+    ...data,
+    rating: 4.8,
+    reviews_count: 12
+  });
+});
+
 app.put("/api/listing/:id", async (req, res) => {
   const { id } = req.params;
   const { title, price, category, description, location, user_id } = req.body;
@@ -231,6 +253,24 @@ app.put("/api/listing/:id", async (req, res) => {
 
   res.status(200).json({ updated: true });
 });
+
+app.get('/api/findChat', async (req, res) => {
+  const {firebase_uid, listing_id} = req.query
+  const { data, error } = await supabase
+  .from("conversations")
+  .select("id")
+  .eq("listing_id", listing_id)
+  .eq("buyer_id", firebase_uid)
+  .maybeSingle()
+  res.json(data)
+})
+
+app.get('/api/getAllUsers', async (req, res) => {
+  const response = await supabase
+  .from("profiles")
+  .select("*")
+  res.json(response)
+})
 
 // Export the Express API directly for Vercel
 export default app;

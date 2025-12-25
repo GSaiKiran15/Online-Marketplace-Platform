@@ -9,26 +9,29 @@ const MyListings = () => {
   const { user, isLoading } = useUser();
   const navigate = useNavigate();
   const [listings, setListings] = useState([]);
+  const [profile, setProfile] = useState(null);
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [showFilters, setShowFilters] = useState(false);
   const [sortBy, setSortBy] = useState("newest");
 
   useEffect(() => {
-  if (!user || isLoading) return;
+    if (!user || isLoading) return;
 
-  const fetchLikedListings = async () => {
-    try {
-      const response = await api.get("/api/myListings", {
-        params: { user_id: user.uid },
-      });
-      setListings(response.data);
-    } catch (err) {
-      console.error("Failed to fetch liked listings", err);
-    }
-  };
+    const fetchData = async () => {
+      try {
+        const [listingsRes, profileRes] = await Promise.all([
+          api.get("/api/myListings", { params: { user_id: user.uid } }),
+          api.get("/api/userProfile", { params: { firebase_uid: user.uid } })
+        ]);
+        setListings(listingsRes.data);
+        setProfile(profileRes.data);
+      } catch (err) {
+        console.error("Failed to fetch data", err);
+      }
+    };
 
-  fetchLikedListings();
-}, [user, isLoading]);
+    fetchData();
+  }, [user, isLoading]);
 
   // Map UI-friendly names to database values
   const categoryMap = {
@@ -89,7 +92,31 @@ const MyListings = () => {
   };
 
   return (
+    <>
     <div className="listings-container">
+      {profile && (
+        <div className="user-profile-card">
+          <img src={user.photoURL || "/user.png"} alt="Profile" className="profile-avatar" />
+          <div className="profile-info">
+            <h1>{profile.display_name || "User"}</h1>
+            <div className="profile-stats">
+              <div className="stat-item">
+                <span className="stat-label">Rating</span>
+                <span className="stat-value">⭐ {profile.rating} ({profile.reviews_count} reviews)</span>
+              </div>
+              <div className="stat-item">
+                <span className="stat-label">Member Since</span>
+                <span className="stat-value">
+                  {new Date(profile.created_at).toLocaleDateString(undefined, { month: 'long', year: 'numeric' })}
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      <h2 className="section-header">Your Listings</h2>
+
       <div className="controls-bar">
         <button
           className="control-button"
@@ -144,6 +171,7 @@ const MyListings = () => {
         ))}
       </div>
     </div>
+    </>
   );
 };
 

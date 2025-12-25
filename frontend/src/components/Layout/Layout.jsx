@@ -26,23 +26,33 @@ const Layout = ({ children }) => {
         {!isLoading && (
           user ? (
             <nav className="navbar-links">
-              <span className="navbar-user">Hi, {userName}</span>
-              <Link to="/my-listings" className="navbar-link">My Listings</Link>
-              <Link to="/" className="navbar-link">
-                Listings
+<div className="navbar-user">👋 Hi, <strong>{userName}</strong></div>
+              <Link to="/my-listings" className="navbar-link">
+                <img src="/user.png" width={20} height={20} alt="" />
+                <span>Account</span>
               </Link>
-              <Link to="/create-listing" className="navbar-link">Create Listing</Link>
-
-              <Link to="/liked-listings" className="navbar-link">Liked Listings</Link>
-              <button onClick={handleLogout} className="logout-button navbar-link">Logout</button>
+              <Link to="/create-listing" className="navbar-link">
+                <img src="/plus.png" width={20} height={20} alt="" />
+                <span>Create Listing</span>
+              </Link>
+              <Link to="/liked-listings" className="navbar-link">
+                <img src="/heart.png" width={20} height={20} alt="" />
+                <span>Liked</span>
+              </Link>
+              <button onClick={handleLogout} className="logout-button navbar-link">
+                <img src="/logout.png" width={20} height={20} alt="" />
+                <span>Logout</span>
+              </button>
             </nav>
           ) : (
             <nav className="navbar-links">
               <Link to="/login" className="navbar-link">
-                Login
+                <img src="/login.png" width={20} height={20} alt="" />
+                <span>Login</span>
               </Link>
               <Link to="/create-account" className="navbar-link">
-                Create Account
+                <img src="/create.png" width={20} height={20} alt="" />
+                <span>Register</span>
               </Link>
             </nav>
           )
