@@ -300,6 +300,35 @@ app.get('/api/getAllUsers', async (req, res) => {
   res.json(response)
 })
 
+app.post('/api/mark-sold/:id', async (req, res) => {
+  const {id} = req.params
+  console.log(id)
+  const {data, error} = await supabase
+  .from('listings')
+  .update({is_sold:true})
+  .eq('id', id)
+  .select()
+  if (data) {
+    res.json(data)
+  }
+  else{res.json(error)}
+  
+})
+
+app.post('/api/mark-available/:id', async (req, res) => {
+  const {id} = req.params
+  console.log(id)
+  const {data, error} = await supabase
+  .from('listings')
+  .update({is_sold:false})
+  .eq('id', id)
+  .select()
+  if (data){
+    res.json(data)
+  }
+  else{res.json(error)}
+})
+
 // Export the Express API directly for Vercel
 export default app;
 

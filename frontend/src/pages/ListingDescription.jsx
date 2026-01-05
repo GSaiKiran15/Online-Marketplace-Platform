@@ -11,6 +11,7 @@ export const ListingDescription = () => {
   const [loading, setLoading] = useState(true);
   const [isLiked, setIsLiked] = useState(false);
   const [isOwner, setIsOwner] = useState(false);
+  const [isSold, setIsSold] = useState(false);
   const { user, isLoading } = useUser();
 
   useEffect(() => {
@@ -26,6 +27,7 @@ export const ListingDescription = () => {
         setIsLiked(response.data.isLiked);
         setIsOwner(response.data.user_id === user.uid);
         setLoading(false);
+        setIsSold(response.data.is_sold);
       } catch (err) {
         console.error("Failed to load listing", err);
         setLoading(false);
@@ -89,6 +91,18 @@ export const ListingDescription = () => {
 
   const handleEditListing = () => {
     navigate(`/edit-listing/${listing.id}`);
+  };
+
+  const handleSold = async () => {
+    const response = await api.post(`/api/mark-sold/${id}`, { id: listing.id });
+    setIsSold(true);
+  };
+
+  const handleAvailable = async () => {
+    const response = await api.post(`/api/mark-available/${id}`, {
+      id: listing.id,
+    });
+    setIsSold(false);
   };
 
   const handleMessage = async () => {
@@ -259,25 +273,43 @@ export const ListingDescription = () => {
                     Edit Listing
                   </button>
                   <br></br>
-                  <button
-                    className="edit-btn"
-                    onClick={() => navigate(`/edit-listing/${listing.id}`)}
-                  >
-                    <svg
-                      width="20"
-                      height="20"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    >
-                      <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
-                      <polyline points="22 4 12 14.01 9 11.01" />
-                    </svg>
-                    Mark as Sold
-                  </button>
+                  <>
+                    {isSold ? (
+                      <button className="edit-btn" onClick={handleAvailable}>
+                        <svg
+                          width="20"
+                          height="20"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        >
+                          <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+                          <polyline points="22 4 12 14.01 9 11.01" />
+                        </svg>
+                        Mark as available
+                      </button>
+                    ) : (
+                      <button className="edit-btn" onClick={handleSold}>
+                        <svg
+                          width="20"
+                          height="20"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        >
+                          <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+                          <polyline points="22 4 12 14.01 9 11.01" />
+                        </svg>
+                        Mark as Sold
+                      </button>
+                    )}
+                  </>
                 </>
               ) : (
                 <>
