@@ -11,6 +11,7 @@ import { CreateListing } from "./pages/CreateListing.jsx";
 import LikedListings from "./pages/LikedListings.jsx";
 import MyListings from "./pages/MyListings.jsx";
 import EditListing from "./pages/EditListing.jsx";
+import Chats from "./pages/Chats.jsx";
 const routes = [
   {
     path: "/",
@@ -93,6 +94,14 @@ const routes = [
         <EditListing />
       </Layout>
     ),
+  },
+  {
+    path: "/chats",
+    element: (
+      <Layout>
+        <Chats/>
+      </Layout>
+    )
   }
 ];
 

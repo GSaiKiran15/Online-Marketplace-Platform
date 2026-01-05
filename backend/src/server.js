@@ -265,6 +265,34 @@ app.get('/api/findChat', async (req, res) => {
   res.json(data)
 })
 
+app.post('/api/createChat', async (req, res) => {
+  const { listingId, buyerId } = req.body;
+  const { data: listing, error: listingError } = await supabase
+    .from('listings')
+    .select('user_id')
+    .eq('id', listingId)
+    .single();
+  if (listingError) {
+    return res.status(500).json({ error: listingError });
+  }
+  if (!listing) {
+    return res.status(404).json({ error: "Listing is not found" });
+  }
+  const { data: response, error: responseError } = await supabase
+    .from('conversations')
+    .insert({
+      listing_id: listingId,
+      buyer_id: buyerId,
+      seller_id: listing.user_id // <-- use listing.user_id here
+    })
+    .select()
+    .single();
+  if (responseError) {
+    return res.status(500).json({ error: responseError });
+  }
+  res.json(response);
+});
+
 app.get('/api/getAllUsers', async (req, res) => {
   const response = await supabase
   .from("profiles")

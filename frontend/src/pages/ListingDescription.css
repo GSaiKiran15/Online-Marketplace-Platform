@@ -428,16 +428,25 @@
   box-shadow: 0 6px 20px rgba(79, 70, 229, 0.35);
 }
 
-.favorite-btn,
-.edit-btn {
+.favorite-btn {
   background: var(--bg-subtle);
   color: var(--text-primary);
   border: 1px solid var(--border);
 }
 
-.favorite-btn:hover,
-.edit-btn:hover {
+.edit-btn {
+  background: var(--input-border);
+  color: var(--text-primary);
+  border: 1px solid var(--border);
+}
+
+.favorite-btn:hover {
   background: var(--nav-hover-bg);
+  transform: translateY(-2px);
+}
+
+.edit-btn:hover {
+  background: var(--border);
   transform: translateY(-2px);
 }
 

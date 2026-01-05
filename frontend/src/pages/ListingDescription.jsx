@@ -13,30 +13,28 @@ export const ListingDescription = () => {
   const [isOwner, setIsOwner] = useState(false);
   const { user, isLoading } = useUser();
 
- useEffect(() => {
-  if (!user || isLoading) return; // ⛔ wait for auth
+  useEffect(() => {
+    if (!user || isLoading) return; // ⛔ wait for auth
 
-  const fetchData = async () => {
-    try {
-      const response = await api.get(`/api/listing/${id}`, {
-        params: { firebase_uid: user.uid },
-      });
+    const fetchData = async () => {
+      try {
+        const response = await api.get(`/api/listing/${id}`, {
+          params: { firebase_uid: user.uid },
+        });
 
-      setListing(response.data);
-      setIsLiked(response.data.isLiked);
-      setIsOwner(response.data.user_id === user.uid);
-      setLoading(false);
-    } catch (err) {
-      console.error("Failed to load listing", err);
-      setLoading(false);
-    }
-  };
+        setListing(response.data);
+        setIsLiked(response.data.isLiked);
+        setIsOwner(response.data.user_id === user.uid);
+        setLoading(false);
+      } catch (err) {
+        console.error("Failed to load listing", err);
+        setLoading(false);
+      }
+    };
 
-  fetchData();
-}, [id, user, isLoading]);
+    fetchData();
+  }, [id, user, isLoading]);
 
-
-  
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
   const nextImage = () => {
@@ -45,7 +43,8 @@ export const ListingDescription = () => {
 
   const prevImage = () => {
     setCurrentImageIndex(
-      (prev) => (prev - 1 + listing.image_urls.length) % listing.image_urls.length
+      (prev) =>
+        (prev - 1 + listing.image_urls.length) % listing.image_urls.length
     );
   };
 
@@ -54,14 +53,14 @@ export const ListingDescription = () => {
       alert("Please login to save listings");
       return;
     }
-    
+
     if (!isLiked) {
       try {
         const response = await api.post("/api/likeListing", {
           firebase_uid: user.uid,
-          listing_id: listing.id
+          listing_id: listing.id,
         });
-        
+
         if (response.status === 200) {
           setIsLiked(true);
           console.log("Listing saved!", response.data);
@@ -74,9 +73,9 @@ export const ListingDescription = () => {
       try {
         const response = await api.post("/api/unlikeListing", {
           firebase_uid: user.uid,
-          listing_id: listing.id
+          listing_id: listing.id,
         });
-        
+
         if (response.status === 200) {
           setIsLiked(false);
           console.log("Listing unliked!", response.data);
@@ -86,28 +85,27 @@ export const ListingDescription = () => {
         alert("Failed to unlike listing. Please try again.");
       }
     }
-  };  
+  };
 
   const handleEditListing = () => {
     navigate(`/edit-listing/${listing.id}`);
   };
-    
+
   const handleMessage = async () => {
     const response = await api.get("/api/findChat", {
       firebase_uid: user.uid,
-      listing_id: listing.id
-    })
+      listing_id: listing.id,
+    });
 
     if (response.status === 200) {
-      navigate(`/conversation/${conversation.id}`)
-    }
-    else{
-      const response = await api.post("/api/createChat")
+      navigate(`/conversation/${conversation.id}`);
+    } else {
+      const response = await api.post("/api/createChat");
       if (response.status === 200) {
-        navigate(`/conversation/${conversation.id}`)
+        navigate(`/conversation/${conversation.id}`);
       }
     }
-  }
+  };
   console.log(listing);
   if (loading) return <p>Loading...</p>;
   return (
@@ -172,7 +170,9 @@ export const ListingDescription = () => {
               </div>
               <div className="price-card">
                 <p className="price-label">Asking Price</p>
-                <p className="details-price">${Number(listing.price).toLocaleString()}</p>
+                <p className="details-price">
+                  ${Number(listing.price).toLocaleString()}
+                </p>
               </div>
             </div>
 
@@ -195,7 +195,10 @@ export const ListingDescription = () => {
               </h2>
               <div className="description-box">
                 <h3 className="description-heading">Description</h3>
-                <p className="description-text" style={{ whiteSpace: 'pre-wrap' }}>
+                <p
+                  className="description-text"
+                  style={{ whiteSpace: "pre-wrap" }}
+                >
                   {listing.description}
                 </p>
               </div>
@@ -216,73 +219,99 @@ export const ListingDescription = () => {
                       <svg
                         key={i}
                         className={
-                          i < listing.user.rating
-                            ? "star-filled"
-                            : "star-empty"
+                          i < listing.user.rating ? "star-filled" : "star-empty"
                         }
                         width="16"
                         height="16"
                         viewBox="0 0 24 24"
-                        fill={
-                          i < listing.user.rating
-                            ? "currentColor"
-                            : "none"
-                        }
+                        fill={i < listing.user.rating ? "currentColor" : "none"}
                         stroke="currentColor"
                         strokeWidth="2"
                       >
                         <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
                       </svg>
                     ))}
-                    <span className="rating-text">
-                      {listing.user.rating}.0
-                    </span>
+                    <span className="rating-text">{listing.user.rating}.0</span>
                   </div>
-                  <p className="seller-meta">Member since {listing.user.created_at.slice(0,4)}</p>
+                  <p className="seller-meta">
+                    Member since {listing.user.created_at.slice(0, 4)}
+                  </p>
                 </div>
               </div>
-              {isOwner ? <>
-              
-              
-              <button className="edit-btn" onClick={() => navigate(`/edit-listing/${listing.id}`)}>
-                <svg
-                  width="20"
-                  height="20"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z" />
-                </svg>
-                Edit Listing
-              </button></> : <><button className="contact-btn" onClick={handleMessage}>
-                <svg
-                  width="20"
-                  height="20"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                >
-                  <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
-                </svg>
-                Contact Seller
-              </button><button className="favorite-btn" onClick={() => handleSaveListing(listing)}>
-                <svg
-                  width="20"
-                  height="20"
-                  viewBox="0 0 24 24"
-                  fill={isLiked ? "#ef4444" : "none"}
-                  stroke={isLiked ? "#ef4444" : "currentColor"}
-                  strokeWidth="2"
-                >
-                  <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
-                </svg>
-                {isLiked ? "Saved" : "Save Listing"}
-              </button></>}
+              {isOwner ? (
+                <>
+                  <button
+                    className="edit-btn"
+                    onClick={() => navigate(`/edit-listing/${listing.id}`)}
+                  >
+                    <svg
+                      width="20"
+                      height="20"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
+                      <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z" />
+                    </svg>
+                    Edit Listing
+                  </button>
+                  <br></br>
+                  <button
+                    className="edit-btn"
+                    onClick={() => navigate(`/edit-listing/${listing.id}`)}
+                  >
+                    <svg
+                      width="20"
+                      height="20"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
+                      <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+                      <polyline points="22 4 12 14.01 9 11.01" />
+                    </svg>
+                    Mark as Sold
+                  </button>
+                </>
+              ) : (
+                <>
+                  <button className="contact-btn" onClick={handleMessage}>
+                    <svg
+                      width="20"
+                      height="20"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                    >
+                      <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+                    </svg>
+                    Contact Seller
+                  </button>
+                  <button
+                    className="favorite-btn"
+                    onClick={() => handleSaveListing(listing)}
+                  >
+                    <svg
+                      width="20"
+                      height="20"
+                      viewBox="0 0 24 24"
+                      fill={isLiked ? "#ef4444" : "none"}
+                      stroke={isLiked ? "#ef4444" : "currentColor"}
+                      strokeWidth="2"
+                    >
+                      <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+                    </svg>
+                    {isLiked ? "Saved" : "Save Listing"}
+                  </button>
+                </>
+              )}
             </div>
 
             <div className="safety-card">
