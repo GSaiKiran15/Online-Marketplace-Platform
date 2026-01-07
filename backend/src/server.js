@@ -43,7 +43,10 @@ app.get("/", async (req, res) => {
 
 app.get("/api/feed", async (req, res) => {
   // Run the select to actually fetch rows and return an error response if it fails
-  const { data, error } = await supabase.from("listings").select();
+  const { data, error } = await supabase
+    .from("listings")
+    .select()
+    .eq("is_sold", false);
 
   if (error) {
     console.error("/api/feed supabase error", error);
