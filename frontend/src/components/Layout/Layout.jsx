@@ -39,6 +39,10 @@ const Layout = ({ children }) => {
                 <img src="/heart.png" width={20} height={20} alt="" />
                 <span>Liked</span>
               </Link>
+              <Link to="/chats" className="navbar-link">
+                <img src="/chat.png" width={20} height={20} alt="" />
+                <span>Chats</span>
+              </Link>
               <button onClick={handleLogout} className="logout-button navbar-link">
                 <img src="/logout.png" width={20} height={20} alt="" />
                 <span>Logout</span>

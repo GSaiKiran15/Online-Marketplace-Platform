@@ -43,13 +43,13 @@ export default function Chats() {
 
     async function loadChats() {
       try {
-        const { data } = await api.get("/api/chats");
+        const { data } = await api.get("/api/findChat");
         if (!cancelled) setChats(data);
       } catch (err) {
         console.error("Failed to load chats", err);
       }
     }
-
+    setChats(data)
     loadChats();
     return () => {
       cancelled = true;
