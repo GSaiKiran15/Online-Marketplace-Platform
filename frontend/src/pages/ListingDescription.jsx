@@ -89,20 +89,28 @@ export const ListingDescription = () => {
     }
   };
 
-  const handleEditListing = () => {
-    navigate(`/edit-listing/${listing.id}`);
-  };
-
   const handleSold = async () => {
-    const response = await api.post(`/api/mark-sold/${id}`, { id: listing.id });
-    setIsSold(true);
+    try {
+      await api.post(`/api/mark-sold/${id}`, {
+        id: listing.id,
+      });
+      setIsSold(true);
+    } catch (error) {
+      console.error("Failed to mark as sold:", error);
+      alert("Failed to mark as sold. Please try again.");
+    }
   };
 
   const handleAvailable = async () => {
-    const response = await api.post(`/api/mark-available/${id}`, {
-      id: listing.id,
-    });
-    setIsSold(false);
+    try {
+      await api.post(`/api/mark-available/${id}`, {
+        id: listing.id,
+      });
+      setIsSold(false);
+    } catch (error) {
+      console.error("Failed to mark as available:", error);
+      alert("Failed to mark as available. Please try again.");
+    }
   };
 
   const handleMessage = async () => {
@@ -110,13 +118,15 @@ export const ListingDescription = () => {
       firebase_uid: user.uid,
       listing_id: listing.id,
     });
-
     if (response.status === 200) {
-      navigate(`/conversation/${conversation.id}`);
+      navigate(`/conversation/${response.id}`);
     } else {
-      const response = await api.post("/api/createChat");
+      const response = await api.post("/api/createChat", {
+        listingId: listing.id,
+        buyerId: user.uid
+      });
       if (response.status === 200) {
-        navigate(`/conversation/${conversation.id}`);
+        navigate(`/conversation/${response.id}`);
       }
     }
   };
